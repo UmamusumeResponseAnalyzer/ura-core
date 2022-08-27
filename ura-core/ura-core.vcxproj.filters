@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="dllproxy">
+      <UniqueIdentifier>{3b147603-d721-481f-a6f2-2aa92a6bf7ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="il2cpp">
+      <UniqueIdentifier>{8cabaf3e-2e30-43de-82b9-8c8059c93eb6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="notifier">
+      <UniqueIdentifier>{a26a6169-5be8-4599-aa98-b6eac09405c5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllproxy\proxy.cpp">
+      <Filter>dllproxy</Filter>
+    </ClCompile>
+    <ClCompile Include="il2cpp\il2cpp_symbols.cpp">
+      <Filter>il2cpp</Filter>
+    </ClCompile>
+    <ClCompile Include="notifier\notifier.cpp">
+      <Filter>notifier</Filter>
+    </ClCompile>
+    <ClCompile Include="hook.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dllproxy\proxy.def">
+      <Filter>dllproxy</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="dllproxy\proxy.hpp">
+      <Filter>dllproxy</Filter>
+    </ClInclude>
+    <ClInclude Include="il2cpp\il2cpp_symbols.hpp">
+      <Filter>il2cpp</Filter>
+    </ClInclude>
+    <ClInclude Include="notifier\httplib.h">
+      <Filter>notifier</Filter>
+    </ClInclude>
+    <ClInclude Include="notifier\notifier.hpp">
+      <Filter>notifier</Filter>
+    </ClInclude>
+    <ClInclude Include="stdinclude.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <MASM Include="dllproxy\psapi.asm">
+      <Filter>dllproxy</Filter>
+    </MASM>
+    <MASM Include="dllproxy\version.asm">
+      <Filter>dllproxy</Filter>
+    </MASM>
+    <MASM Include="dllproxy\winhttp.asm">
+      <Filter>dllproxy</Filter>
+    </MASM>
+  </ItemGroup>
+</Project>
