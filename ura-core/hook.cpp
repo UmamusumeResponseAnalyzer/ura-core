@@ -5,28 +5,29 @@ using namespace std;
 
 namespace
 {
-	void path_game_assembly();
+	bool patch_game_assembly();
 	void* load_library_w_orig = nullptr;
 	void* set_fps_orig = nullptr;
 	void* LZ4_decompress_safe_ext_orig = nullptr;
 	void* LZ4_compress_default_ext_orig = nullptr;
 	void* get_DatabaseSavePath_orig = nullptr;
 	void* GetMasterdataDirectory_orig = nullptr;
+	void* LZ4_compress_default_ext_addr = nullptr;
+	void* LZ4_decompress_safe_ext_addr = nullptr;
 
 	HMODULE __stdcall load_library_w_hook(const wchar_t* path)
 	{
 		// GameAssembly.dll code must be loaded and decrypted while loading criware library
-		if (path == L"cri_ware_unity.dll"s)
+		if (path == L"libnative.dll"s)
 		{
-			path_game_assembly();
+			if (patch_game_assembly()) {
+				MH_DisableHook(LoadLibraryW);
+				MH_RemoveHook(LoadLibraryW);
 
-			MH_DisableHook(LoadLibraryW);
-			MH_RemoveHook(LoadLibraryW);
-
-			// use original function beacuse we have unhooked that
-			return LoadLibraryW(path);
+				// use original function beacuse we have unhooked that
+				return LoadLibraryW(path);
+			}
 		}
-
 		return reinterpret_cast<decltype(LoadLibraryW)*>(load_library_w_orig)(path);
 	}
 
@@ -103,7 +104,7 @@ namespace
 		}
 	}
 
-	void path_game_assembly()
+	bool patch_game_assembly()
 	{
 		printf("Trying to patch GameAssembly.dll...\n");
 
@@ -148,8 +149,10 @@ namespace
 		//	"Plugin", "LZ4_decompress_safe_ext", 4
 		//);
 		const auto libnative = GetModuleHandle("libnative.dll");
-		auto LZ4_compress_default_ext_addr = GetProcAddress(libnative, "LZ4_compress_default_ext");
-		auto LZ4_decompress_safe_ext_addr = GetProcAddress(libnative, "LZ4_decompress_safe_ext");
+		LZ4_compress_default_ext_addr = GetProcAddress(libnative, "LZ4_compress_default_ext");
+		LZ4_decompress_safe_ext_addr = GetProcAddress(libnative, "LZ4_decompress_safe_ext");
+		if (LZ4_compress_default_ext_addr == nullptr || LZ4_decompress_safe_ext_addr == nullptr)
+			return false;
 #pragma endregion
 		ADD_HOOK(set_fps, "UnityEngine.Application.set_targetFrameRate at %p \n");
 		ADD_HOOK(LZ4_decompress_safe_ext, "LibNative.LZ4.Plugin.LZ4_decompress_safe_ext at %p \n");
@@ -159,15 +162,20 @@ namespace
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
+		return true;
 	}
 }
 
 bool init_hook()
 {
-	if (compatible_mode)
+	if (compatible_mode) {
 		std::this_thread::sleep_for(std::chrono::seconds(10));
-	MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
-	MH_EnableHook(LoadLibraryW);
+		patch_game_assembly();
+	}
+	else {
+		MH_CreateHook(LoadLibraryW, load_library_w_hook, &load_library_w_orig);
+		MH_EnableHook(LoadLibraryW);
+	}
 
 	std::thread ping_thread([]() {
 		notifier::ping();
