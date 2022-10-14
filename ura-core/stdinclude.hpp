@@ -21,6 +21,7 @@
 
 extern bool compatible_mode;
 extern int g_max_fps;
+extern int g_vertical_sync_count;
 extern bool g_skip_single_instance_check;
 extern std::string g_notifier_host;
 extern std::string g_savedata_path;

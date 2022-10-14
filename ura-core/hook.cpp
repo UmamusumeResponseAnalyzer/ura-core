@@ -8,6 +8,7 @@ namespace
 	bool patch_game_assembly();
 	void* load_library_w_orig = nullptr;
 	void* set_fps_orig = nullptr;
+	void* set_vSyncCount_orig = nullptr;
 	void* LZ4_decompress_safe_ext_orig = nullptr;
 	void* LZ4_compress_default_ext_orig = nullptr;
 	void* get_DatabaseSavePath_orig = nullptr;
@@ -34,6 +35,11 @@ namespace
 	void set_fps_hook(int value)
 	{
 		return reinterpret_cast<decltype(set_fps_hook)*>(set_fps_orig)(g_max_fps);
+	}
+
+	void set_vSyncCount_hook(int value) 
+	{
+		return reinterpret_cast<decltype(set_vSyncCount_hook)*>(set_vSyncCount_orig)(g_vertical_sync_count);
 	}
 
 	int LZ4_decompress_safe_ext_hook(
@@ -129,6 +135,11 @@ namespace
 			"Application", "set_targetFrameRate", 1
 		);
 
+		auto set_vSyncCount_addr = il2cpp_symbols::get_method_pointer(
+			"UnityEngine.CoreModule.dll", "UnityEngine",
+			"QualitySettings", "set_vSyncCount", 1
+		);
+
 		auto get_DatabaseSavePath_addr = il2cpp_symbols::get_method_pointer(
 			"umamusume.dll", "Gallop",
 			"SaveDataManager", "get_DatabaseSavePath", 0
@@ -155,6 +166,7 @@ namespace
 			return false;
 #pragma endregion
 		ADD_HOOK(set_fps, "UnityEngine.Application.set_targetFrameRate at %p \n");
+		ADD_HOOK(set_vSyncCount, "UnityEngine.QualitySettings.set_vSyncCount at %p \n");
 		ADD_HOOK(LZ4_decompress_safe_ext, "LibNative.LZ4.Plugin.LZ4_decompress_safe_ext at %p \n");
 		ADD_HOOK(LZ4_compress_default_ext, "LibNative.LZ4.Plugin.LZ4_compress_default_ext at %p \n");
 		if (!g_savedata_path.empty())
@@ -162,6 +174,7 @@ namespace
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
+		set_vSyncCount_hook(1);
 		return true;
 	}
 }

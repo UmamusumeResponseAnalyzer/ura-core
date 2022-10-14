@@ -10,6 +10,7 @@ extern void uninit_hook();
 
 bool compatible_mode = false;
 int g_max_fps = -1;
+int g_vertical_sync_count = 1;
 bool g_skip_single_instance_check = true;
 std::string g_notifier_host = "http://127.0.0.1:4693";
 std::string g_savedata_path = "";
@@ -45,6 +46,8 @@ namespace
 				g_savedata_path = document["savedata_path"].GetString();
 			if (document.HasMember("skip_single_instance_check"))
 				g_skip_single_instance_check = document["skip_single_instance_check"].GetBool();
+			if (document.HasMember("vertical_sync_count"))
+				g_vertical_sync_count = document["vertical_sync_count"].GetInt();
 		}
 
 		config_stream.close();
