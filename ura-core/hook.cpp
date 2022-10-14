@@ -174,7 +174,7 @@ namespace
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
-		set_vSyncCount_hook(1);
+		set_vSyncCount_hook(g_vertical_sync_count);
 		return true;
 	}
 }
