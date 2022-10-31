@@ -37,7 +37,7 @@ namespace
 		return reinterpret_cast<decltype(set_fps_hook)*>(set_fps_orig)(g_max_fps);
 	}
 
-	void set_vSyncCount_hook(int value) 
+	void set_vSyncCount_hook(int value)
 	{
 		return reinterpret_cast<decltype(set_vSyncCount_hook)*>(set_vSyncCount_orig)(g_vertical_sync_count);
 	}
@@ -130,10 +130,7 @@ namespace
 #pragma endregion
 #pragma region HOOK_ADDRESSES
 
-		auto set_fps_addr = il2cpp_symbols::get_method_pointer(
-			"UnityEngine.CoreModule.dll", "UnityEngine",
-			"Application", "set_targetFrameRate", 1
-		);
+		auto set_fps_addr = il2cpp_resolve_icall("UnityEngine.Application::set_targetFrameRate(System.Int32)");
 
 		auto set_vSyncCount_addr = il2cpp_symbols::get_method_pointer(
 			"UnityEngine.CoreModule.dll", "UnityEngine",
@@ -174,7 +171,8 @@ namespace
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
-		set_vSyncCount_hook(g_vertical_sync_count);
+		if (g_vertical_sync_count != 0)
+			set_vSyncCount_hook(g_vertical_sync_count);
 		return true;
 	}
 }

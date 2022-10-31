@@ -10,7 +10,7 @@ extern void uninit_hook();
 
 bool compatible_mode = false;
 int g_max_fps = -1;
-int g_vertical_sync_count = 1;
+int g_vertical_sync_count = 0;
 bool g_skip_single_instance_check = true;
 std::string g_notifier_host = "http://127.0.0.1:4693";
 std::string g_savedata_path = "";
@@ -39,6 +39,9 @@ namespace
 				monitor.dmSize = sizeof(DEVMODE);
 				EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &monitor);
 				g_max_fps = monitor.dmDisplayFrequency;
+				//大于90会报错
+				if (g_max_fps > 90)
+					g_max_fps = 90;
 			}
 			if (document.HasMember("notifier_host"))
 				g_notifier_host = document["notifier_host"].GetString();
