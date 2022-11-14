@@ -39,9 +39,6 @@ namespace
 				monitor.dmSize = sizeof(DEVMODE);
 				EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &monitor);
 				g_max_fps = monitor.dmDisplayFrequency;
-				//大于90会报错
-				if (g_max_fps > 90)
-					g_max_fps = 90;
 			}
 			if (document.HasMember("notifier_host"))
 				g_notifier_host = document["notifier_host"].GetString();
