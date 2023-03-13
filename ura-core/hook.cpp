@@ -129,13 +129,7 @@ namespace
 	MH_EnableHook(_name_##_offset); 
 #pragma endregion
 #pragma region HOOK_ADDRESSES
-
 		auto set_fps_addr = il2cpp_resolve_icall("UnityEngine.Application::set_targetFrameRate(System.Int32)");
-
-		auto set_vSyncCount_addr = il2cpp_symbols::get_method_pointer(
-			"UnityEngine.CoreModule.dll", "UnityEngine",
-			"QualitySettings", "set_vSyncCount", 1
-		);
 
 		auto get_DatabaseSavePath_addr = il2cpp_symbols::get_method_pointer(
 			"umamusume.dll", "Gallop",
@@ -163,7 +157,6 @@ namespace
 			return false;
 #pragma endregion
 		ADD_HOOK(set_fps, "UnityEngine.Application.set_targetFrameRate at %p \n");
-		ADD_HOOK(set_vSyncCount, "UnityEngine.QualitySettings.set_vSyncCount at %p \n");
 		ADD_HOOK(LZ4_decompress_safe_ext, "LibNative.LZ4.Plugin.LZ4_decompress_safe_ext at %p \n");
 		ADD_HOOK(LZ4_compress_default_ext, "LibNative.LZ4.Plugin.LZ4_compress_default_ext at %p \n");
 		if (!g_savedata_path.empty())
@@ -171,8 +164,6 @@ namespace
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
-		if (g_vertical_sync_count != 0)
-			set_vSyncCount_hook(g_vertical_sync_count);
 		return true;
 	}
 }
