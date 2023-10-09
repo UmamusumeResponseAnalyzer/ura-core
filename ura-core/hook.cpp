@@ -156,14 +156,15 @@ namespace
 		if (LZ4_compress_default_ext_addr == nullptr || LZ4_decompress_safe_ext_addr == nullptr)
 			return false;
 #pragma endregion
-		ADD_HOOK(set_fps, "UnityEngine.Application.set_targetFrameRate at %p \n");
-		ADD_HOOK(LZ4_decompress_safe_ext, "LibNative.LZ4.Plugin.LZ4_decompress_safe_ext at %p \n");
-		ADD_HOOK(LZ4_compress_default_ext, "LibNative.LZ4.Plugin.LZ4_compress_default_ext at %p \n");
-		if (!g_savedata_path.empty())
-		{
+		if (g_max_fps != -1) {
+			ADD_HOOK(set_fps, "UnityEngine.Application.set_targetFrameRate at %p \n");
+		}
+		if (!g_savedata_path.empty()) {
 			ADD_HOOK(get_DatabaseSavePath, "get_DatabaseSavePath at %p\n");
 			ADD_HOOK(GetMasterdataDirectory, "GetMasterdataDirectory at %p\n");
 		}
+		ADD_HOOK(LZ4_decompress_safe_ext, "LibNative.LZ4.Plugin.LZ4_decompress_safe_ext at %p \n");
+		ADD_HOOK(LZ4_compress_default_ext, "LibNative.LZ4.Plugin.LZ4_compress_default_ext at %p \n");
 		return true;
 	}
 }

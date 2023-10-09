@@ -96,8 +96,6 @@ int __stdcall DllMain(HINSTANCE hInstance, DWORD reason, LPVOID)
 			module_path.parent_path()
 		);
 
-		read_config();
-
 #if defined _DEBUG
 		AllocConsole();
 
@@ -114,6 +112,7 @@ int __stdcall DllMain(HINSTANCE hInstance, DWORD reason, LPVOID)
 		std::locale::global(std::locale(""));
 #endif
 
+		read_config();
 		MH_Initialize();
 		if (g_skip_single_instance_check) {
 			MH_CreateHook(&CreateMutex, &CreateMutexDetour, &CreateMutex_orig);
